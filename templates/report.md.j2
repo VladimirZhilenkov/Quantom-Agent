@@ -1,0 +1,21 @@
+# {{ title }}
+
+**Date:** {{ date }}
+**Engine:** {{ engine }} | **Method:** {{ method }}/{{ basis }}
+
+---
+
+## Results
+
+{% for r in results %}
+### Job {{ r.job_id }}
+
+| Property     | Value            |
+|--------------|------------------|
+| Energy       | {{ r.energy }} Ha |
+| Converged    | {{ r.converged }} |
+| Wall time    | {{ r.wall_time }} s |
+{% if r.dipole %}| Dipole       | {{ r.dipole }} D |{% endif %}
+{% if r.frequencies %}| Frequencies  | {{ r.frequencies | length }} modes |{% endif %}
+
+{% endfor %}

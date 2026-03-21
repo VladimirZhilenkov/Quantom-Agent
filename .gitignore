@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+
+# Data & jobs
+data/
+jobs/
+*.db
+
+# ORCA license
+orca_license/
+
+# macOS
+.DS_Store
+._*
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MLflow
+mlruns/

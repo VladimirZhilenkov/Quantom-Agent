@@ -1,0 +1,35 @@
+services:
+
+  agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.agent
+    volumes:
+      - ./jobs:/app/jobs
+      - ./data:/app/data
+    env_file: .env
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    depends_on:
+      - pyscf
+
+  pyscf:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pyscf
+    volumes:
+      - ./jobs:/jobs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  orca:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.orca
+    volumes:
+      - ./jobs:/jobs
+      - ./orca_license:/orca_license
