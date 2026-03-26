@@ -1,0 +1,32 @@
+# qchem-agent Project Context
+
+## Architecture
+- `qchem_converter.py` — конвертер Psi4/ORCA → PySCF
+- `test_suite.py` — 83 теста
+
+## Critical Rules
+- Double hybrid DFT (B2PLYP, PWPB95, DSD-*) требует отдельного пути:
+  явное построение xc-строки + scaled MP2 на KS орбиталях
+- Детектировать double hybrid ПЕРЕД общим DFT в парсерах
+- SOS-функционалы: same-spin scaling = 0.0
+
+## Team Branches
+- vladimir/* — QM tools, converter
+- misha/* — visualization, data parsing  
+- vlad/* — API, frontend
+- ihsaan/* — databases, model training
+
+## Test Command
+pytest test_suite.py -v
+```
+
+---
+
+## Шаг 4 — Дополнительно: @claude по требованию
+
+Любой участник может написать `@claude` в PR или issue, и Claude проанализирует код, создаст PR или исправит баг — всё следуя стандартам проекта. 
+```
+# Примеры комментариев в PR:
+@claude проверь обработку B2GP-PLYP в этом коде
+@claude запусти тесты и исправь упавшие
+@claude объясни что изменилось в парсере ORCA

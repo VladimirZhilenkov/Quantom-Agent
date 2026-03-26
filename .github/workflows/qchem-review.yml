@@ -1,0 +1,48 @@
+name: QChem Agent Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # для мерджа
+      pull-requests: write   # для комментариев
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyscf pytest
+
+      - name: Claude Code Review + Auto-merge
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: "--max-turns 10"
+          direct_prompt: |
+            Ты — ревьюер химического агента qchem-agent.
+
+            ЗАДАЧА:
+            1. Запусти тесты: `pytest test_suite.py -v --tb=short`
+            2. Проверь изменённые файлы на:
+               - корректность парсинга методов (HF, DFT, MP2, CCSD)
+               - правильную обработку double hybrid DFT (B2PLYP, PWPB95 и др.)
+               - корректность mixing coefficients и SOS-параметров
+               - open-shell системы и PCM/ddCOSMO
+            3. Если все тесты прошли и код корректен:
+               - оставь комментарий "✅ APPROVED: все проверки пройдены"
+               - смерджи PR командой: `gh pr merge --squash --auto`
+            4. Если есть проблемы:
+               - оставь детальный комментарий с конкретными замечаниями
+               - НЕ мерджи PR
