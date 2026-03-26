@@ -9,8 +9,9 @@ jobs:
   review:
     runs-on: ubuntu-latest
     permissions:
-      contents: write        # для мерджа
-      pull-requests: write   # для комментариев
+      contents: write
+      pull-requests: write
+      id-token: write        # ← добавить это
 
     steps:
       - uses: actions/checkout@v4
@@ -28,9 +29,9 @@ jobs:
       - name: Claude Code Review + Auto-merge
         uses: anthropics/claude-code-action@v1
         with:
-          claude_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}  # ← исправить
           claude_args: "--max-turns 10"
-          direct_prompt: |
+          prompt: |                                                          # ← исправить
             Ты — ревьюер химического агента qchem-agent.
 
             ЗАДАЧА:
