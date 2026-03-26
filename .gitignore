@@ -41,3 +41,6 @@ orca_license/
 
 # MLflow
 mlruns/
+
+
+._*
