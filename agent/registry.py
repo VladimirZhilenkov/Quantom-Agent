@@ -2,6 +2,8 @@ from typing import Callable, Any
 from pydantic import BaseModel, TypeAdapter, ValidationError
 import inspect
 from loguru import logger
+from converter import qchem_converter
+import logging
 
 tools = {}
 
@@ -78,3 +80,26 @@ async def execute_tool(name: str, args: dict) -> Any:
     except Exception as e:
         logger.exception(f"Tool '{name}' execution failed")
         return f"Error during execution of {name}: {str(e)}"
+
+logger = logging.getLogger(__name__)        
+
+@register_tool 
+def standardize_chem_input(raw_format : str, input_format: str = "auto") -> str :
+    try:
+        pyscf_script = qchem_converter.convert(
+            text = raw_format,
+            fmt = input_format,
+            source_name = "agent_standardizer"
+        )
+
+        if not pyscf_script:
+            return "Error: Converter didn't create a script. Check data validity"
+        return pyscf_script
+    
+    except ValueError as ve:
+        return f"Recognize error: {str(ve)}. Specify format (orca/psi4)."
+    except Exception as e:
+        logger.error(f"Tool execution error: {e}")
+        return f"Convertation technic error: {str(e)}"
+
+
